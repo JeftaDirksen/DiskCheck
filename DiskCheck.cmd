@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 
 :: Config
 set logfile=DiskCheck.log
@@ -18,8 +19,11 @@ if %errorlevel%==0 set error=1
 
 :: On errors
 if %error%==1 (
+  echo %date% %time% Error - Sending mail >> %logfile%
   set /p password=<password.txt
-  Mailer.exe -u jeftadirksen@gmail.com -p %password% -t jeftadirksen@gmail.com -s "DiskCheck Error" -b "See attachment" -a %tempfile%
+  Mailer.exe -u jeftadirksen@gmail.com -p !password! -t jeftadirksen@gmail.com -s "DiskCheck Error" -b "See attachment" -a %tempfile% >> %logfile%
+) else (
+  echo %date% %time% OK >> %logfile%
 )
 
 :end
